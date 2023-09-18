@@ -13,6 +13,6 @@ export type TUser = {
 
 export interface IAuthContext {
   user: TUser
-  handleAuthenticate: (email: string, password: string) => void
-  handleSignUp: (userData: TUserSignUp) => void
+  handleAuthenticate: (email: string, password: string) => Promise<void>
+  handleSignUp: (userData: TUserSignUp) => Promise<void>
 }

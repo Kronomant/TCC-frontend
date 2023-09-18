@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useCallback, useState } from "react"
 import {
   Button,
   Divider,
@@ -7,6 +7,8 @@ import {
   InputGroup,
   Text,
   InputRightElement,
+  FormControl,
+  FormErrorMessage,
 } from "@chakra-ui/react"
 
 interface ILoginSection {
@@ -15,17 +17,24 @@ interface ILoginSection {
 
 import * as S from "./LoginSection.style"
 import { useAuth } from "context/Auth/Auth.context"
+import { validateSchema } from "lib/common"
+import { LoginSchema } from "./LoginSection.data"
 
 export const LoginSection = ({ setShowSign }: ILoginSection) => {
   const [value, setValue] = useState({ email: "", password: "" })
+  const [errors, setErrors] = useState<{ [key:string] : string}>({})
 
   const { handleAuthenticate } = useAuth()
 
   const [show, setShow] = useState(false)
 
-  const handleClick = () => {
-    handleAuthenticate(value.email, value.password)
-  }
+
+  const handleLogin = useCallback(async() =>  {
+    validateSchema(LoginSchema, value, setErrors, async () => {
+      await handleAuthenticate(value.email, value.password)
+    })
+  
+  }, [])
 
   return (
     <S.LoginWrapper>
@@ -37,29 +46,39 @@ export const LoginSection = ({ setShowSign }: ILoginSection) => {
           </Text>
         </Flex>
 
+      <FormControl isInvalid={!!errors?.email}>
         <Input
           placeholder="Email"
           value={value?.email}
           onChange={(e) => setValue((s) => ({ ...s, email: e.target.value }))}
         />
-        <InputGroup size="md">
-          <Input
-            pr="4.5rem"
-            type={show ? "text" : "password"}
-            placeholder="Enter password"
-            value={value?.password}
-            onChange={(e) =>
-              setValue((s) => ({ ...s, password: e.target.value }))
-            }
-          />
-          <InputRightElement width="4.5rem">
-            <Button h="1.75rem" size="sm" onClick={() => setShow(!show)}>
-              {show ? "Hide" : "Show"}
-            </Button>
-          </InputRightElement>
-        </InputGroup>
+         {!!errors?.email && (
+              <FormErrorMessage>Email is required.</FormErrorMessage>
+          )}
+        </FormControl>
+        <FormControl isInvalid={!!errors?.password}>
+          <InputGroup size="md">
+            <Input
+              pr="4.5rem"
+              type={show ? "text" : "password"}
+              placeholder="Enter password"
+              value={value?.password}
+              onChange={(e) =>
+                setValue((s) => ({ ...s, password: e.target.value }))
+              }
+            />
+            <InputRightElement width="4.5rem">
+              <Button h="1.75rem" size="sm" onClick={() => setShow(!show)}>
+                {show ? "Hide" : "Show"}
+              </Button>
+            </InputRightElement>
+          </InputGroup>
+        {!!errors?.password && (
+            <FormErrorMessage>Password is required.</FormErrorMessage>
+          )}
+        </FormControl>
 
-        <Button colorScheme="blue" width="100%" onClick={handleClick}>
+        <Button colorScheme="blue" width="100%" onClick={handleLogin}>
           Log in
         </Button>
         <Flex w="100%" flexDir="column" justifyContent="center">
