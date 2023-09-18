@@ -1,0 +1,4 @@
+{
+  "processors": ["style-processor-styled-components"],
+  "extends": ["style-config-recommended"]
+}
