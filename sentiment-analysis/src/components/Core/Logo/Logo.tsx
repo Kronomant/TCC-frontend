@@ -1,16 +1,18 @@
 import { Flex, Text } from "@chakra-ui/react"
 
-import Balancer from 'react-wrap-balancer'
+import Balancer from "react-wrap-balancer"
 
-import * as S from './Logo.style'
+import * as S from "./Logo.syle.ts"
 
 export const Logo = () => (
-  <Flex flexDir='column' justifyContent='center' gap='24px'>
-    <S.Logo fontWeight='semiBold' textAlign='center'>OSÍRIS</S.Logo>
-    <Text fontSize='4xl' textAlign='center' color='white'>
+  <Flex flexDir="column" justifyContent="center" gap="24px">
+    <S.Logo fontWeight="semiBold" textAlign="center">
+      OSÍRIS
+    </S.Logo>
+    <S.subTitle fontSize="4xl">
       <Balancer>
-      Sentiment Analysis < br /> with Artificial Intelligence
-      </Balancer> 
-    </Text>
+        Sentiment Analysis <br /> with Artificial Intelligence
+      </Balancer>
+    </S.subTitle>
   </Flex>
-  )
+)
