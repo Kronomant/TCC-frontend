@@ -1,11 +1,11 @@
 import { Text } from "@chakra-ui/react"
 import styled from "styled-components"
 
-export const Logo = styled(Text)`
+export const Logo = styled(Text)<{ hasSubTitle: boolean }>`
   font-weight: 700;
   letter-spacing: -4px;
   font-size: 90px;
-  color: #002b5b;
+  color: ${({ hasSubTitle }) => (hasSubTitle ? "#002b5b" : "white")};
 `
 
 export const subTitle = styled(Text)`
