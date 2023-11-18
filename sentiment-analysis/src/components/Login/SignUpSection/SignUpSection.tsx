@@ -31,12 +31,11 @@ export const SignUpSection = ({ setShowSign }: ISignUpSection) => {
 
   const invalidPassword = value?.password !== password && password?.length > 0
 
-  const handleSignUser = useCallback(async() => {
+  const handleSignUser = useCallback(async () => {
     validateSchema(SignSchema, value, setErrors, async () => {
       setErrors({})
       await handleSignUp(value)
     })
-  
   }, [])
 
   return (
@@ -52,15 +51,15 @@ export const SignUpSection = ({ setShowSign }: ISignUpSection) => {
         <Flex w="100%" my="48px" flexDir="column" gap="24px">
           <Flex gap="24px">
             <FormControl isInvalid={!!errors?.firstName}>
-            <Input
-              placeholder="First Name"
-              value={value?.firstName}
-              onChange={(e) =>
-                setValue((s) => ({ ...s, firstName: e.target.value }))
-              }
-            />
-             {!!errors?.firstName && (
-              <FormErrorMessage>First Name is required.</FormErrorMessage>
+              <Input
+                placeholder="First Name"
+                value={value?.firstName}
+                onChange={(e) =>
+                  setValue((s) => ({ ...s, firstName: e.target.value }))
+                }
+              />
+              {!!errors?.firstName && (
+                <FormErrorMessage>First Name is required.</FormErrorMessage>
               )}
             </FormControl>
             <FormControl isInvalid={!!errors?.lastName}>
@@ -73,15 +72,16 @@ export const SignUpSection = ({ setShowSign }: ISignUpSection) => {
               />
               {!!errors?.lastName && (
                 <FormErrorMessage>Last Name is required.</FormErrorMessage>
-                )}
+              )}
             </FormControl>
-          
           </Flex>
           <FormControl isInvalid={!!errors?.email}>
             <Input
               placeholder="Email *"
               value={value?.email}
-              onChange={(e) => setValue((s) => ({ ...s, email: e.target.value }))}
+              onChange={(e) =>
+                setValue((s) => ({ ...s, email: e.target.value }))
+              }
             />
             {!!errors?.email && (
               <FormErrorMessage>Email is required.</FormErrorMessage>
@@ -89,27 +89,27 @@ export const SignUpSection = ({ setShowSign }: ISignUpSection) => {
           </FormControl>
 
           <FormControl isInvalid={!!errors?.password}>
-          <InputGroup size="md">
-            <Input
-              pr="4.5rem"
-              type={show ? "text" : "password"}
-              placeholder="Enter password"
-              value={value?.password}
-              onChange={(e) =>
-                setValue((s) => ({ ...s, password: e.target.value }))
-              }
-            />
-            <InputRightElement width="4.5rem">
-              <Button h="1.75rem" size="sm" onClick={handleClick}>
-                {show ? "Hide" : "Show"}
-              </Button>
-            </InputRightElement>
-          </InputGroup>
-          {!!errors?.password && (
+            <InputGroup size="md">
+              <Input
+                pr="4.5rem"
+                type={show ? "text" : "password"}
+                placeholder="Enter password"
+                value={value?.password}
+                onChange={(e) =>
+                  setValue((s) => ({ ...s, password: e.target.value }))
+                }
+              />
+              <InputRightElement width="4.5rem">
+                <Button h="1.75rem" size="sm" onClick={handleClick}>
+                  {show ? "Hide" : "Show"}
+                </Button>
+              </InputRightElement>
+            </InputGroup>
+            {!!errors?.password && (
               <FormErrorMessage>Password is required.</FormErrorMessage>
             )}
           </FormControl>
-          
+
           <Input
             placeholder="Confirm Password *"
             value={password}
@@ -117,8 +117,6 @@ export const SignUpSection = ({ setShowSign }: ISignUpSection) => {
             onChange={(e) => setPassword(e.target.value)}
           />
         </Flex>
-
-      
 
         <Button colorScheme="blue" width="100%" onClick={handleSignUser}>
           Sign Up

@@ -5,7 +5,7 @@ import { Flex, Text } from "@chakra-ui/react"
 export const LoginWrapper = styled(Flex)`
   display: flex;
   flex-direction: column;
-  width: 50%;
+  width: 100%;
   align-items: center;
   justify-content: center;
 `

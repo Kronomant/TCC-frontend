@@ -1,5 +1,4 @@
-import { memo } from "react"
-
+import { useMemo } from "react"
 import ReactApexChart from "react-apexcharts"
 import {
   Flex,
@@ -9,12 +8,55 @@ import {
   TabPanels,
   TabPanel,
   Text,
+  Skeleton,
 } from "@chakra-ui/react"
 import { ApexOptions } from "apexcharts"
 
 import * as S from "./TimelineChart.style"
+import { EStatusOption, TTimelineChartData } from "context/Application"
 
-export const TimelineChart = () => {
+interface ITimelineChart {
+  status: EStatusOption
+  positiveChartData: TTimelineChartData
+  negativeChartData: TTimelineChartData
+}
+
+const TimelineSkeleton = () => (
+  <Flex alignItems="baseline" gap="16px">
+    <Skeleton w="30px" height="200px" rounded="lg" />
+    <Skeleton w="30px" height="120px" rounded="lg" />
+    <Skeleton w="30px" height="180px" rounded="lg" />
+    <Skeleton w="30px" height="50px" rounded="lg" />
+    <Skeleton w="30px" height="20px" rounded="lg" />
+    <Skeleton w="30px" height="10px" rounded="lg" />
+    <Skeleton w="30px" height="120px" rounded="lg" />
+    <Skeleton w="30px" height="80px" rounded="lg" />
+    <Skeleton w="30px" height="50px" rounded="lg" />
+    <Skeleton w="30px" height="20px" rounded="lg" />
+  </Flex>
+)
+
+export const TimelineChart = ({
+  status,
+  positiveChartData,
+  negativeChartData,
+}: ITimelineChart) => {
+  const positiveData = useMemo(
+    () =>
+      positiveChartData?.percent?.map((percent) =>
+        parseFloat(percent?.toFixed(1)),
+      ),
+    [positiveChartData],
+  )
+
+  const negativeData = useMemo(
+    () =>
+      negativeChartData?.percent?.map((percent) =>
+        parseFloat(percent?.toFixed(1)),
+      ),
+    [negativeChartData],
+  )
+
   const options: ApexOptions = {
     chart: {
       height: 350,
@@ -41,20 +83,6 @@ export const TimelineChart = () => {
     },
 
     xaxis: {
-      categories: [
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-        "Oct",
-        "Nov",
-        "Dec",
-      ],
       position: "top",
       axisBorder: {
         show: false,
@@ -98,9 +126,8 @@ export const TimelineChart = () => {
     <S.Container>
       <Flex w="100%" justifyContent="space-between">
         <Text fontSize="xl" fontWeight="semibold">
-          Sentiment Chart
+          Timeline Chart
         </Text>
-        <Text fontSize="xl">23/10/2023</Text>
       </Flex>
 
       <Tabs variant="soft-rounded" colorScheme="blackAlpha">
@@ -111,36 +138,52 @@ export const TimelineChart = () => {
 
         <TabPanels>
           <TabPanel>
-            <ReactApexChart
-              options={options}
-              series={[
-                {
-                  name: "Inflation",
-                  data: [
-                    2.3, 3.1, 4.0, 10.1, 4.0, 3.6, 3.2, 2.3, 1.4, 0.8, 0.5, 0.2,
-                  ],
-                },
-              ]}
-              type="bar"
-              width={550}
-            />
+            {status === EStatusOption.PENDING && <TimelineSkeleton />}
+            {status === EStatusOption.DONE && (
+              <ReactApexChart
+                options={{
+                  ...options,
+                  colors: ["#26B20F"],
+                  xaxis: {
+                    ...options.xaxis,
+                    categories: positiveChartData?.days,
+                  },
+                }}
+                series={[
+                  {
+                    name: "Positive",
+                    data: positiveData,
+                  },
+                ]}
+                type="bar"
+                width={550}
+              />
+            )}
           </TabPanel>
           <TabPanel>
-            <ReactApexChart
-              options={options}
-              series={[
-                {
-                  name: "Inflation",
-                  data: [
-                    5.3, 2.1, 1.0, 20.1, 3.0, 2.6, 6.2, 1.3, 6.4, 0.8, 2.5, 0.2,
-                  ],
-                },
-              ]}
-              type="bar"
-              width={550}
-            />
+            {status === EStatusOption.PENDING && <TimelineSkeleton />}
+
+            {status === EStatusOption.DONE && (
+              <ReactApexChart
+                options={{
+                  ...options,
+                  colors: ["#E13434"],
+                  xaxis: {
+                    ...options.xaxis,
+                    categories: negativeChartData?.days,
+                  },
+                }}
+                series={[
+                  {
+                    name: "Negative",
+                    data: negativeData,
+                  },
+                ]}
+                type="bar"
+                width={550}
+              />
+            )}
           </TabPanel>
-          <TabPanel></TabPanel>
         </TabPanels>
       </Tabs>
     </S.Container>

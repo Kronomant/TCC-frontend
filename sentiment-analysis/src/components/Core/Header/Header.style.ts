@@ -8,6 +8,7 @@ export const Container = styled(Flex)<{ isVariant: boolean }>`
   padding: 16px 24px;
   gap: 16px;
   color: ${({ isVariant }) => (isVariant ? "white" : "black")};
+  z-index: 9;
 
   a {
     &:hover {

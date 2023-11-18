@@ -11,6 +11,44 @@ export enum EOpinion {
   NEUTRAL = "NEUTRAL,",
 }
 
+export enum EStatusOption {
+  PENDING = "PENDING",
+  ERROR = "ERROR",
+  DONE = "DONE",
+}
+
+export type TSentimentChartData = {
+  positive_percentage: number
+  negative_percentage: number
+  neutral_percentage: number
+  created_at: string
+}
+
+export type TTimelineChartData = {
+  days: string[]
+  percent: number[]
+}
+
+export type RealTimeSearch = {
+  id: number
+  sentiment_chart: TSentimentChartData
+  positive_timeline_chart: TTimelineChartData
+  negative_timeline_chart: TTimelineChartData
+}
+
+export type TRealTimeSearchResponse = {
+  status: EStatusOption
+  data: RealTimeSearch
+}
+
+export type TSearch = {
+  term: string
+  location: string
+  user_id: number
+}
+
 export interface IApplicationContext {
   locations: TLocation[]
+  handleRealTimeSearch: (data: TSearch) => Promise<void>
+  search: TRealTimeSearchResponse
 }

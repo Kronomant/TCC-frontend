@@ -6,8 +6,16 @@ import {
   useEffect,
 } from "react"
 
-import { IApplicationContext, TLocation } from "./Application.types"
+import {
+  EStatusOption,
+  IApplicationContext,
+  RealTimeSearch,
+  TRealTimeSearchResponse,
+  TLocation,
+  TSearch,
+} from "./Application.types"
 import { getAllLocation } from "services/location.api"
+import { searchTerm } from "services/search.api"
 
 export const ApplicationContext = createContext<IApplicationContext>(
   {} as IApplicationContext,
@@ -19,6 +27,7 @@ const ApplicationProvider: React.FC<React.PropsWithChildren> = ({
   children,
 }: React.PropsWithChildren) => {
   const [locations, setLocations] = useState<TLocation[]>([])
+  const [search, setSearch] = useState<TRealTimeSearchResponse>()
 
   const handleGetLocations = useCallback(async () => {
     const { response, status } = await getAllLocation()
@@ -26,12 +35,29 @@ const ApplicationProvider: React.FC<React.PropsWithChildren> = ({
     else setLocations([])
   }, [setLocations, getAllLocation])
 
+  const handleRealTimeSearch = useCallback(
+    async (data: TSearch) => {
+      setSearch((v) => ({ ...v, status: EStatusOption.PENDING }))
+
+      const { response, status } = await searchTerm(data)
+
+      if (status === EStatusOption.DONE) {
+        setSearch(() => ({ status: EStatusOption.DONE, data: response }))
+      } else {
+        setSearch((v) => ({ ...v, status: EStatusOption.ERROR }))
+      }
+    },
+    [setSearch, searchTerm],
+  )
+
   useEffect(() => {
     handleGetLocations()
   }, [handleGetLocations])
 
   return (
-    <ApplicationContext.Provider value={{ locations }}>
+    <ApplicationContext.Provider
+      value={{ locations, handleRealTimeSearch, search }}
+    >
       {children}
     </ApplicationContext.Provider>
   )

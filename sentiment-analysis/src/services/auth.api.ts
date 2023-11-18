@@ -10,15 +10,14 @@ export const authenticate = async (
   status: number
   response: TUser
 }> => {
-  const resp = await API.post("/auth", { email, password })
+  const resp = await API.post("/user/auth", { email, password })
     .then(({ data, status }) => {
-      console.log(data)
       toast.success("Usuário autenticado!")
       return {
         status,
         response: {
-          firstName: data?.username,
-          lastName: data?.username,
+          id: data?.id,
+          username: data?.username,
           email: data?.email,
         },
       }
@@ -30,22 +29,20 @@ export const authenticate = async (
   return resp
 }
 
-
 export const signUser = async (
-  userData: TUserSignUp
+  userData: TUserSignUp,
 ): Promise<{
   status: number
   response: TUser
 }> => {
   const resp = await API.post("/user", userData)
     .then(({ data, status }) => {
-      console.log(data)
       toast.success("Usuário cadastrado!")
       return {
         status,
         response: {
-          firstName: data?.username,
-          lastName: data?.username,
+          id: data?.id,
+          username: data?.username,
           email: data?.email,
         },
       }

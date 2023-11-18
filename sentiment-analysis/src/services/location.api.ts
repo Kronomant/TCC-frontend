@@ -9,7 +9,6 @@ export const getAllLocation = async (): Promise<{
 }> => {
   const resp = await API.get("/location/list")
     .then(({ data, status }) => {
-      console.log("locations", data)
       return {
         status,
         response: data.map((item) => ({

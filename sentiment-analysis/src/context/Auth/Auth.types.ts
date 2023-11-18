@@ -6,8 +6,8 @@ export type TUserSignUp = {
 }
 
 export type TUser = {
-  firstName: string
-  lastName: string
+  id: number
+  username: string
   email: string
 }
 

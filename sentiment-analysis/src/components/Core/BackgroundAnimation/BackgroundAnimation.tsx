@@ -93,6 +93,7 @@ export const BackgroundAnimation: React.FC<{ color: string }> = ({ color }) => {
     <canvas
       ref={canvasRef}
       style={{
+        zIndex: -1,
         width: "100%",
         height: "100%",
         position: "absolute",

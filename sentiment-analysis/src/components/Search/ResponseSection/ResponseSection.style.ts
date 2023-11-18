@@ -15,6 +15,7 @@ export const Container = styled.div<{ isActive: boolean }>`
   transition: all 0.7s ease;
   justify-content: center;
   align-items: center;
+  gap: 24px;
 
   div {
     transition: opacity 0.7s ease;
@@ -22,8 +23,8 @@ export const Container = styled.div<{ isActive: boolean }>`
 `
 
 export const ChartWrapper = styled(Flex)`
-  width: 40%;
+  width: 100%;
+  height: 700px;
   justify-content: space-between;
-  flex-direction: column;
   gap: 16px;
 `

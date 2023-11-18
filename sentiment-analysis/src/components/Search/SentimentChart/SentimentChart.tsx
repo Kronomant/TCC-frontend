@@ -1,10 +1,23 @@
-import { Flex, Text } from "@chakra-ui/react"
+import { Flex, Skeleton, Text } from "@chakra-ui/react"
 import ReactApexChart from "react-apexcharts"
 import { ApexOptions } from "apexcharts"
 
-import * as S from "./SentimentChart.style"
+import { format, parseISO, isValid } from "date-fns"
 
-export const SentimentChart = () => {
+import * as S from "./SentimentChart.style"
+import { EStatusOption, TSentimentChartData } from "context/Application"
+
+interface ISentimentChart {
+  status: EStatusOption
+  data: TSentimentChartData
+}
+
+export const SentimentChart = ({ status, data }: ISentimentChart) => {
+  const formattedDate =
+    data && isValid(parseISO(data.created_at))
+      ? format(new Date(data.created_at), "dd/MM/yyyy HH:mm")
+      : "Invalid Date"
+
   const options: ApexOptions = {
     chart: {
       width: 200,
@@ -13,6 +26,9 @@ export const SentimentChart = () => {
     dataLabels: {
       enabled: true,
       textAnchor: "end",
+      style: {
+        fontSize: "14px",
+      },
     },
     labels: ["Positive", "Negative", "Neutral"],
     colors: ["#26B20F", "#E13434", "#002B5B"],
@@ -21,6 +37,8 @@ export const SentimentChart = () => {
     },
     legend: {
       position: "right",
+      horizontalAlign: "center",
+      fontSize: "16px",
     },
   }
 
@@ -30,14 +48,25 @@ export const SentimentChart = () => {
         <Text fontSize="xl" fontWeight="semibold">
           Sentiment Chart
         </Text>
-        <Text fontSize="xl">23/10/2023</Text>
+        <Text fontSize="xl">{formattedDate}</Text>
       </Flex>
-      <ReactApexChart
-        options={options}
-        series={[9, 15, 5]}
-        type="donut"
-        width={450}
-      />
+      <Flex justifyContent="center" height="100%" alignItems="center">
+        {status === EStatusOption.PENDING && (
+          <Skeleton height={250} w={250} borderRadius="50%" />
+        )}
+        {status === EStatusOption.DONE && (
+          <ReactApexChart
+            options={options}
+            series={[
+              data?.positive_percentage,
+              data?.negative_percentage,
+              data?.neutral_percentage,
+            ]}
+            type="donut"
+            width={450}
+          />
+        )}
+      </Flex>
     </S.Container>
   )
 }

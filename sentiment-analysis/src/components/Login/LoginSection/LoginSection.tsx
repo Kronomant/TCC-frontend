@@ -22,19 +22,17 @@ import { LoginSchema } from "./LoginSection.data"
 
 export const LoginSection = ({ setShowSign }: ILoginSection) => {
   const [value, setValue] = useState({ email: "", password: "" })
-  const [errors, setErrors] = useState<{ [key:string] : string}>({})
+  const [errors, setErrors] = useState<{ [key: string]: string }>({})
 
   const { handleAuthenticate } = useAuth()
 
   const [show, setShow] = useState(false)
 
-
-  const handleLogin = useCallback(async() =>  {
+  const handleLogin = useCallback(async () => {
     validateSchema(LoginSchema, value, setErrors, async () => {
       await handleAuthenticate(value.email, value.password)
     })
-  
-  }, [])
+  }, [value, handleAuthenticate, setErrors, validateSchema])
 
   return (
     <S.LoginWrapper>
@@ -46,14 +44,14 @@ export const LoginSection = ({ setShowSign }: ILoginSection) => {
           </Text>
         </Flex>
 
-      <FormControl isInvalid={!!errors?.email}>
-        <Input
-          placeholder="Email"
-          value={value?.email}
-          onChange={(e) => setValue((s) => ({ ...s, email: e.target.value }))}
-        />
-         {!!errors?.email && (
-              <FormErrorMessage>Email is required.</FormErrorMessage>
+        <FormControl isInvalid={!!errors?.email}>
+          <Input
+            placeholder="Email"
+            value={value?.email}
+            onChange={(e) => setValue((s) => ({ ...s, email: e.target.value }))}
+          />
+          {!!errors?.email && (
+            <FormErrorMessage>Email is required.</FormErrorMessage>
           )}
         </FormControl>
         <FormControl isInvalid={!!errors?.password}>
@@ -73,7 +71,7 @@ export const LoginSection = ({ setShowSign }: ILoginSection) => {
               </Button>
             </InputRightElement>
           </InputGroup>
-        {!!errors?.password && (
+          {!!errors?.password && (
             <FormErrorMessage>Password is required.</FormErrorMessage>
           )}
         </FormControl>

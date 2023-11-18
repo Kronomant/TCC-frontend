@@ -1,37 +1,43 @@
 import { useState } from "react"
 
 import { Flex, Image } from "@chakra-ui/react"
-import * as S from "./Login.style"
 
 import { SignUpSection } from "components/Login/SignUpSection"
 import { LoginSection } from "components/Login/LoginSection"
-import AuthProvider from "context/Auth/Auth.context"
+import * as S from "./Login.style"
 
 const Login = () => {
   const [showSign, setShowSign] = useState<boolean>(false)
 
   return (
-    <AuthProvider>
-      <S.Container>
+    <S.Container>
+      <Flex
+        justifyContent="center"
+        alignItems="center"
+        w="50%"
+        flexDir="column"
+      >
         {showSign && <SignUpSection setShowSign={setShowSign} />}
         {!showSign && <LoginSection setShowSign={setShowSign} />}
+      </Flex>
 
-        <Flex
+      <Flex
+        borderRadius="48px 0 0 48px"
+        backgroundColor="#DADEE0"
+        justifyContent="start"
+        w="45%"
+        position="relative"
+        height="100vh"
+      >
+        <S.Logo fontWeight="semibold">OSÍRIS</S.Logo>
+        <Image
+          w="100%"
+          objectFit="cover"
           borderRadius="48px 0 0 48px"
-          backgroundColor="#DADEE0"
-          justifyContent="start"
-          w="45%"
-          height="100vh"
-        >
-          <Image
-            w="100%"
-            objectFit="cover"
-            borderRadius="48px 0 0 48px"
-            src="/public/login.jpg"
-          />
-        </Flex>
-      </S.Container>
-    </AuthProvider>
+          src="/public/fisrtCard.jpg"
+        />
+      </Flex>
+    </S.Container>
   )
 }
 
