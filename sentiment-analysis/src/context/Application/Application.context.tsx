@@ -13,9 +13,11 @@ import {
   TRealTimeSearchResponse,
   TLocation,
   TSearch,
+  TCompareSearch,
+  TCompareSearchResponse,
 } from "./Application.types"
 import { getAllLocation } from "services/location.api"
-import { searchTerm } from "services/search.api"
+import { compareTerms, searchTerm } from "services/search.api"
 
 export const ApplicationContext = createContext<IApplicationContext>(
   {} as IApplicationContext,
@@ -28,6 +30,7 @@ const ApplicationProvider: React.FC<React.PropsWithChildren> = ({
 }: React.PropsWithChildren) => {
   const [locations, setLocations] = useState<TLocation[]>([])
   const [search, setSearch] = useState<TRealTimeSearchResponse>()
+  const [compareSearch, setCompareSearch] = useState<TCompareSearchResponse>()
 
   const handleGetLocations = useCallback(async () => {
     const { response, status } = await getAllLocation()
@@ -50,13 +53,33 @@ const ApplicationProvider: React.FC<React.PropsWithChildren> = ({
     [setSearch, searchTerm],
   )
 
+  const handleCompareTerms = useCallback(async (data: TCompareSearch) => {
+    setCompareSearch((v) => ({ ...v, status: EStatusOption.PENDING }))
+
+    const { response, status } = await compareTerms(data)
+
+    if (status === EStatusOption.DONE) {
+      setCompareSearch(() => ({ status: EStatusOption.DONE, data: response }))
+    } else {
+      setCompareSearch((v) => ({ ...v, status: EStatusOption.ERROR }))
+    }
+  }, [])
+
+  console.log(compareSearch)
+
   useEffect(() => {
     handleGetLocations()
   }, [handleGetLocations])
 
   return (
     <ApplicationContext.Provider
-      value={{ locations, handleRealTimeSearch, search }}
+      value={{
+        locations,
+        handleRealTimeSearch,
+        handleCompareTerms,
+        search,
+        compareTerms: compareSearch,
+      }}
     >
       {children}
     </ApplicationContext.Provider>

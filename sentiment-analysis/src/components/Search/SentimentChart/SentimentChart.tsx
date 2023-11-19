@@ -10,9 +10,10 @@ import { EStatusOption, TSentimentChartData } from "context/Application"
 interface ISentimentChart {
   status: EStatusOption
   data: TSentimentChartData
+  title?: string
 }
 
-export const SentimentChart = ({ status, data }: ISentimentChart) => {
+export const SentimentChart = ({ status, data, title }: ISentimentChart) => {
   const formattedDate =
     data && isValid(parseISO(data.created_at))
       ? format(new Date(data.created_at), "dd/MM/yyyy HH:mm")
@@ -46,7 +47,7 @@ export const SentimentChart = ({ status, data }: ISentimentChart) => {
     <S.Container>
       <Flex w="100%" justifyContent="space-between">
         <Text fontSize="xl" fontWeight="semibold">
-          Sentiment Chart
+          {title || "Sentiment Chart"}
         </Text>
         <Text fontSize="xl">{formattedDate}</Text>
       </Flex>

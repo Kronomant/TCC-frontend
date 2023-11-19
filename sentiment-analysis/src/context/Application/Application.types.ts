@@ -36,6 +36,16 @@ export type RealTimeSearch = {
   negative_timeline_chart: TTimelineChartData
 }
 
+export type TCompareTerms = {
+  firstTerm: Record<string, RealTimeSearch>
+  secondTerm: Record<string, RealTimeSearch>
+}
+
+export type TCompareSearchResponse = {
+  status: EStatusOption
+  data: TCompareTerms
+}
+
 export type TRealTimeSearchResponse = {
   status: EStatusOption
   data: RealTimeSearch
@@ -47,8 +57,16 @@ export type TSearch = {
   user_id: number
 }
 
+export type TCompareSearch = {
+  terms: string[]
+  location: string
+  user_id: number
+}
+
 export interface IApplicationContext {
   locations: TLocation[]
-  handleRealTimeSearch: (data: TSearch) => Promise<void>
   search: TRealTimeSearchResponse
+  compareTerms: TCompareSearchResponse
+  handleRealTimeSearch: (data: TSearch) => Promise<void>
+  handleCompareTerms: (data: TCompareSearch) => Promise<void>
 }

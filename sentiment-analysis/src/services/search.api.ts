@@ -4,6 +4,8 @@ import { toast } from "react-toastify"
 import {
   EStatusOption,
   RealTimeSearch,
+  TCompareSearch,
+  TCompareTerms,
   TSearch,
 } from "context/Application/Application.types"
 
@@ -18,6 +20,27 @@ export const searchTerm = async (
       return {
         status: EStatusOption.DONE,
         response: data as RealTimeSearch,
+      }
+    })
+    .catch(() => {
+      toast.error("Error on get search")
+      return { status: EStatusOption.ERROR, response: undefined }
+    })
+
+  return resp
+}
+
+export const compareTerms = async (
+  body: TCompareSearch,
+): Promise<{
+  status: EStatusOption
+  response: TCompareTerms
+}> => {
+  const resp = await API.post("/search/compare", body)
+    .then(({ data }) => {
+      return {
+        status: EStatusOption.DONE,
+        response: data as TCompareTerms,
       }
     })
     .catch(() => {

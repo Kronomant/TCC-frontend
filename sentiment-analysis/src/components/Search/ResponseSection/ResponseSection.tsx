@@ -2,7 +2,7 @@ import { useMemo } from "react"
 import { Flex, Text } from "@chakra-ui/react"
 
 import { MajorityOpinion } from "../MajorityOpinion"
-import { EOpinion, TRealTimeSearchResponse } from "context/Application"
+import { EOpinion, useApplication } from "context/Application"
 import { SentimentChart } from "../SentimentChart"
 import { TimelineChart } from "../TimelineChart"
 
@@ -11,20 +11,17 @@ import * as S from "./ResponseSection.style"
 interface IResponseSection {
   query: string
   isActive: boolean
-  searchResponse: TRealTimeSearchResponse
 }
 
-export const ResponseSection = ({
-  query,
-  isActive,
-  searchResponse,
-}: IResponseSection) => {
+export const ResponseSection = ({ query, isActive }: IResponseSection) => {
+  const { search } = useApplication()
+
   const opinion = useMemo(() => {
     const labelArray = [EOpinion.POSITIVE, EOpinion.NEGATIVE, EOpinion.NEUTRAL]
     const array = [
-      searchResponse?.data?.sentiment_chart?.positive_percentage,
-      searchResponse?.data?.sentiment_chart?.negative_percentage,
-      searchResponse?.data?.sentiment_chart?.neutral_percentage,
+      search?.data?.sentiment_chart?.positive_percentage,
+      search?.data?.sentiment_chart?.negative_percentage,
+      search?.data?.sentiment_chart?.neutral_percentage,
     ]
 
     const maxValue = Math.max(...array)
@@ -32,9 +29,9 @@ export const ResponseSection = ({
 
     return { value: maxValue, opinion: labelArray[indexOfMaxValue] }
   }, [
-    searchResponse?.data?.sentiment_chart?.positive_percentage,
-    searchResponse?.data?.sentiment_chart?.negative_percentage,
-    searchResponse?.data?.sentiment_chart?.neutral_percentage,
+    search?.data?.sentiment_chart?.positive_percentage,
+    search?.data?.sentiment_chart?.negative_percentage,
+    search?.data?.sentiment_chart?.neutral_percentage,
   ])
 
   return (
@@ -47,7 +44,7 @@ export const ResponseSection = ({
           </Text>
         </Flex>
         <MajorityOpinion
-          status={searchResponse.status}
+          status={search?.status}
           percentage={opinion.value.toFixed(1)}
           option={opinion.opinion}
         />
@@ -55,13 +52,13 @@ export const ResponseSection = ({
       <Flex w="100%" justifyContent="center" alignItems="center">
         <S.ChartWrapper>
           <SentimentChart
-            status={searchResponse?.status}
-            data={searchResponse?.data?.sentiment_chart}
+            status={search?.status}
+            data={search?.data?.sentiment_chart}
           />
           <TimelineChart
-            status={searchResponse?.status}
-            positiveChartData={searchResponse?.data?.positive_timeline_chart}
-            negativeChartData={searchResponse?.data?.negative_timeline_chart}
+            status={search?.status}
+            positiveChartData={search?.data?.positive_timeline_chart}
+            negativeChartData={search?.data?.negative_timeline_chart}
           />
         </S.ChartWrapper>
       </Flex>

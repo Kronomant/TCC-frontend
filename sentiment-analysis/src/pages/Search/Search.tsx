@@ -1,36 +1,63 @@
 import { useState, useCallback, useEffect } from "react"
-import { BackgroundAnimation, Header, Logo } from "components"
+import {
+  BackgroundAnimation,
+  ComparisonSection,
+  Header,
+  Logo,
+} from "components"
 
-import { Button, Input } from "@chakra-ui/react"
+import {
+  Button,
+  FormControl,
+  FormErrorMessage,
+  Input,
+  Tab,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
+} from "@chakra-ui/react"
 
 import { Select } from "@chakra-ui/react"
 
 import SearchIcon from "@mui/icons-material/Search"
 
 import * as S from "./Search.style"
-import { TLocation, TSearch, useApplication } from "context/Application"
+import {
+  TCompareSearch,
+  TLocation,
+  TSearch,
+  useApplication,
+} from "context/Application"
 import { ResponseSection } from "components"
 import { validateSchema } from "lib/common"
-import { RealTimeSchema } from "./Search.data"
+import { CompareTermsSchema, RealTimeSchema } from "./Search.data"
 import { useAuth } from "context/Auth/Auth.context"
 
+const TSEARCH_INITIAL_STATE = {
+  term: "",
+  location: "",
+  user_id: null,
+}
+
+const TCOMPARE_INITIAL_STATE = {
+  terms: [""],
+  location: "",
+  user_id: null,
+}
+
 export const Search = () => {
-  const { locations, handleRealTimeSearch, search } = useApplication()
+  const { locations, handleRealTimeSearch, handleCompareTerms } =
+    useApplication()
   const [active, setActive] = useState<boolean>(false)
+  const [activeComparison, setActiveComparison] = useState<boolean>(false)
   const [errors, setErrors] = useState<{ [key: string]: string }>({})
-  const [values, setValues] = useState<TSearch>({
-    term: "",
-    location: "",
-    user_id: null,
-  })
+  const [values, setValues] = useState<TSearch>(TSEARCH_INITIAL_STATE)
+  const [compareValues, setCompareValues] = useState<TCompareSearch>(
+    TCOMPARE_INITIAL_STATE,
+  )
 
   const { user } = useAuth()
-
-  useEffect(() => {
-    if (user) {
-      setValues((v) => ({ ...v, user_id: user.id }))
-    }
-  }, [user, setValues])
 
   const handleLocationChange = (
     event: React.ChangeEvent<HTMLSelectElement>,
@@ -49,7 +76,21 @@ export const Search = () => {
     })
   }, [values, location, setActive, active])
 
-  console.log("Search", search)
+  const handleSendCompareTerms = useCallback(() => {
+    console.log(compareValues)
+    validateSchema(CompareTermsSchema, compareValues, setErrors, async () => {
+      console.log("teste")
+      setActiveComparison(true)
+      await handleCompareTerms(compareValues)
+    })
+  }, [compareValues, location, setActive, active])
+
+  useEffect(() => {
+    if (user) {
+      setValues((v) => ({ ...v, user_id: user.id }))
+      setCompareValues((v) => ({ ...v, user_id: user.id }))
+    }
+  }, [user, setValues])
 
   return (
     <S.Container>
@@ -58,36 +99,125 @@ export const Search = () => {
       <S.Wrapper>
         <S.SearchSection>
           <Logo />
-          <S.SearchWrapper>
-            <Input
-              backgroundColor="white"
-              boxShadow=" rgba(149, 157, 165, 0.2) 0px 8px 24px;"
-              placeholder="Term"
-              onChange={(v) => {
-                const value = v?.currentTarget?.value
-                setValues((s) => ({ ...s, term: value }))
-              }}
-            />
-            <Select
-              backgroundColor="white"
-              boxShadow=" rgba(149, 157, 165, 0.2) 0px 8px 24px;"
-              placeholder="Location"
-              onChange={handleLocationChange}
-            >
-              {locations.map((location) => (
-                <option key={`location-${location.id}`} value={location.id}>
-                  {location?.name}
-                </option>
-              ))}
-            </Select>
-            <Button rightIcon={<SearchIcon />} onClick={handleSendData} />
-          </S.SearchWrapper>
+          <Tabs
+            onChange={(index) => console.log("Tab Index", index)}
+            variant="solid-rounded"
+            colorScheme="twitter"
+          >
+            <TabList>
+              <Tab color="white">Real Time</Tab>
+              <Tab color="white">Compare Terms</Tab>
+              <Tab color="white">Three</Tab>
+            </TabList>
+
+            <TabPanels>
+              <TabPanel>
+                <S.SearchWrapper>
+                  <FormControl isInvalid={!!errors?.term}>
+                    <Input
+                      backgroundColor="white"
+                      boxShadow=" rgba(149, 157, 165, 0.2) 0px 8px 24px;"
+                      placeholder="Term"
+                      onFocus={() =>
+                        setErrors((v) => ({ ...v, ["term"]: undefined }))
+                      }
+                      onChange={(v) => {
+                        const value = v?.currentTarget?.value
+                        setValues((s) => ({ ...s, term: value }))
+                      }}
+                    />
+                    {!!errors?.term && (
+                      <FormErrorMessage>Term is required.</FormErrorMessage>
+                    )}
+                  </FormControl>
+                  <FormControl isInvalid={!!errors?.location}>
+                    <Select
+                      backgroundColor="white"
+                      boxShadow=" rgba(149, 157, 165, 0.2) 0px 8px 24px;"
+                      placeholder="Location"
+                      onChange={handleLocationChange}
+                      onFocus={() =>
+                        setErrors((v) => ({ ...v, ["location"]: undefined }))
+                      }
+                    >
+                      {locations.map((location) => (
+                        <option
+                          key={`location-${location.id}`}
+                          value={location.id}
+                        >
+                          {location?.name}
+                        </option>
+                      ))}
+                    </Select>
+                    {!!errors?.location && (
+                      <FormErrorMessage>Location is required.</FormErrorMessage>
+                    )}
+                  </FormControl>
+                  <Button rightIcon={<SearchIcon />} onClick={handleSendData} />
+                </S.SearchWrapper>
+              </TabPanel>
+              <TabPanel>
+                <S.SearchWrapper>
+                  <Input
+                    backgroundColor="white"
+                    boxShadow=" rgba(149, 157, 165, 0.2) 0px 8px 24px;"
+                    placeholder="first Term"
+                    onChange={(v) => {
+                      const value = v?.currentTarget?.value
+                      setCompareValues((s) => ({
+                        ...s,
+                        terms: [value, ...s.terms.slice(1)],
+                      }))
+                    }}
+                  />
+                  <Input
+                    backgroundColor="white"
+                    boxShadow=" rgba(149, 157, 165, 0.2) 0px 8px 24px;"
+                    placeholder="Second Term"
+                    onChange={(v) => {
+                      const value = v?.currentTarget?.value
+                      setCompareValues((s) => ({
+                        ...s,
+                        terms: [s.terms[0], value, ...s.terms.slice(2)],
+                      }))
+                    }}
+                  />
+                  <Select
+                    backgroundColor="white"
+                    boxShadow=" rgba(149, 157, 165, 0.2) 0px 8px 24px;"
+                    placeholder="Location"
+                    onChange={(v) => {
+                      const value = v?.currentTarget?.value
+                      console.log(value)
+                      setCompareValues((v) => ({ ...v, location: value }))
+                    }}
+                  >
+                    {locations.map((location) => (
+                      <option
+                        key={`location-${location.id}`}
+                        value={location.woeid}
+                      >
+                        {location?.name}
+                      </option>
+                    ))}
+                  </Select>
+                  <Button
+                    rightIcon={<SearchIcon />}
+                    onClick={handleSendCompareTerms}
+                  />
+                </S.SearchWrapper>
+              </TabPanel>
+              <TabPanel w="900px">
+                <p>three!</p>
+              </TabPanel>
+            </TabPanels>
+          </Tabs>
         </S.SearchSection>
 
-        <ResponseSection
-          searchResponse={search}
-          query={values.term}
-          isActive={active}
+        <ResponseSection query={values.term} isActive={active} />
+        <ComparisonSection
+          searchQuery={compareValues}
+          isActive={activeComparison}
         />
       </S.Wrapper>
     </S.Container>
