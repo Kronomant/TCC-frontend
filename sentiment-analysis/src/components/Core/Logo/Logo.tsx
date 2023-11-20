@@ -2,7 +2,7 @@ import { Flex } from "@chakra-ui/react"
 
 import Balancer from "react-wrap-balancer"
 
-import * as S from "./Logo.syle.ts"
+import * as S from './Logo.style'
 
 interface ILogo {
   hasSubTitle?: boolean

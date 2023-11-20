@@ -1,17 +1,19 @@
 import * as S from "./SecondCard.style"
 
 interface ISecondaryCard {
+  title: string
+  content: string
   image: string
 }
 
-export const SecondCard = ({ image }: ISecondaryCard) => (
+export const SecondCard = ({ image, title, content }: ISecondaryCard) => (
   <S.Container background={image}>
     <S.Overlay />
     <S.Text fontSize="3xl" color="white">
-      Compare Terms
+      {title}
     </S.Text>
     <S.Text fontWeight="200" color="white">
-      Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quod fugit
+      {content}
     </S.Text>
   </S.Container>
 )

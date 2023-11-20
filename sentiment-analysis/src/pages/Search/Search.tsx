@@ -8,6 +8,7 @@ import {
 
 import {
   Button,
+  Flex,
   FormControl,
   FormErrorMessage,
   Input,
@@ -33,6 +34,7 @@ import { ResponseSection } from "components"
 import { validateSchema } from "lib/common"
 import { CompareTermsSchema, RealTimeSchema } from "./Search.data"
 import { useAuth } from "context/Auth/Auth.context"
+import { TagManager } from "components/Search/TagManager"
 
 const TSEARCH_INITIAL_STATE = {
   term: "",
@@ -51,6 +53,7 @@ export const Search = () => {
     useApplication()
   const [active, setActive] = useState<boolean>(false)
   const [activeComparison, setActiveComparison] = useState<boolean>(false)
+  const [activeTag, setActiveTag] = useState<boolean>(false)
   const [errors, setErrors] = useState<{ [key: string]: string }>({})
   const [values, setValues] = useState<TSearch>(TSEARCH_INITIAL_STATE)
   const [compareValues, setCompareValues] = useState<TCompareSearch>(
@@ -100,16 +103,15 @@ export const Search = () => {
         <S.SearchSection>
           <Logo />
           <Tabs
-            onChange={(index) => console.log("Tab Index", index)}
+            onChange={(index) => index === 2 ? setActiveTag(true) : setActiveTag(false)}
             variant="solid-rounded"
             colorScheme="twitter"
           >
             <TabList>
               <Tab color="white">Real Time</Tab>
               <Tab color="white">Compare Terms</Tab>
-              <Tab color="white">Three</Tab>
+              <Tab color="white">Tags</Tab>
             </TabList>
-
             <TabPanels>
               <TabPanel>
                 <S.SearchWrapper>
@@ -208,7 +210,7 @@ export const Search = () => {
                 </S.SearchWrapper>
               </TabPanel>
               <TabPanel w="900px">
-                <p>three!</p>
+                <Flex w='900px' h='40px' />
               </TabPanel>
             </TabPanels>
           </Tabs>
@@ -219,6 +221,7 @@ export const Search = () => {
           searchQuery={compareValues}
           isActive={activeComparison}
         />
+        <TagManager isActive={activeTag} />
       </S.Wrapper>
     </S.Container>
   )

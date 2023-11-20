@@ -1,11 +1,9 @@
-import { BackgroundAnimation, Header, Logo } from "components"
+import { BackgroundAnimation, Footer, Header, Logo } from "components"
 
 import * as S from "./Home.style"
 import { PrimeCard } from "components/Home/PrimeCard"
 import { Flex } from "@chakra-ui/react"
 import { SecondCard } from "components/Home/SecondCard/SecondCard"
-
-import { Footer } from "components/Core/Footer"
 
 export const Home = () => (
   <S.Container>
@@ -18,8 +16,8 @@ export const Home = () => (
       </Flex>
       <Flex alignItems="center">
         <Flex flexDir="column">
-          <SecondCard image="/src/assets/fisrtCard.jpg" />
-          <SecondCard image="/src/assets/secondCard.jpg" />
+          <SecondCard title="Compare Terms" content="Compare how the public is reacting diferently between 2 terms" image="/src/assets/fisrtCard.jpg" />
+          <SecondCard title="Tag Terms" content="Create routine to monitoring terms" image="/src/assets/secondCard.jpg" />
         </Flex>
         <PrimeCard />
       </Flex>

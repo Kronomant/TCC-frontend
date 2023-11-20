@@ -12,7 +12,7 @@ export const Container = styled(Flex)<{ isVariant: boolean }>`
 
   a {
     &:hover {
-      color: blue;
+      color: #ea5455;
     }
   }
 `
