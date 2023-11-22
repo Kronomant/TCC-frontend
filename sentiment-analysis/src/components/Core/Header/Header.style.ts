@@ -3,7 +3,7 @@ import styled from "styled-components"
 
 export const Container = styled(Flex)<{ isVariant: boolean }>`
   width: 100%;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   padding: 16px 24px;
   gap: 16px;

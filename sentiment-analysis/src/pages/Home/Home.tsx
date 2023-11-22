@@ -16,8 +16,16 @@ export const Home = () => (
       </Flex>
       <Flex alignItems="center">
         <Flex flexDir="column">
-          <SecondCard title="Compare Terms" content="Compare how the public is reacting diferently between 2 terms" image="/src/assets/fisrtCard.jpg" />
-          <SecondCard title="Tag Terms" content="Create routine to monitoring terms" image="/src/assets/secondCard.jpg" />
+          <SecondCard
+            title="Compare Terms"
+            content="Compare public reactions to two topics."
+            image="/src/assets/fisrtCard.jpg"
+          />
+          <SecondCard
+            title="Tag Terms"
+            content="Create routines to monitoring topics"
+            image="/src/assets/secondCard.jpg"
+          />
         </Flex>
         <PrimeCard />
       </Flex>

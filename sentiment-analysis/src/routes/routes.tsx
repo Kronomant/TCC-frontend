@@ -2,9 +2,8 @@ import Login from "pages/Login/Login"
 import { Home } from "pages/Home"
 import { Search } from "pages/Search"
 import { ERoutes } from "utils/enum/Routes"
-import ApplicationProvider from "context/Application/Application.context"
-import AuthProvider from "context/Auth/Auth.context"
 import { GlobalProviders } from "context"
+import { Profile } from "pages/Profile"
 
 export const Routes = [
   {
@@ -28,6 +27,14 @@ export const Routes = [
     element: (
       <GlobalProviders>
         <Search />
+      </GlobalProviders>
+    ),
+  },
+  {
+    path: ERoutes.PROFILE,
+    element: (
+      <GlobalProviders>
+        <Profile />
       </GlobalProviders>
     ),
   },

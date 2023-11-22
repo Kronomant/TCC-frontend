@@ -3,26 +3,29 @@ import { Button, Flex } from "@chakra-ui/react"
 import * as S from "./PrimeCard.style"
 import { useNavigate } from "react-router-dom"
 import { ERoutes } from "utils/enum/Routes"
+import { useAuth } from "context/Auth/Auth.context"
 
 export const PrimeCard = () => {
   const navigate = useNavigate()
+
+  const { user } = useAuth()
   return (
     <S.Container>
       <Flex gap="24px" flexDir="column">
         <S.Cover background="/src/assets/clockBlue.jpg" />
         <S.Text fontSize="2xl">Real Time Analysis</S.Text>
-        <S.Text fontSize="xs">
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Porro
-          dignissimos, vel doloribus esse modi placeat accusantium ut nisi
-          maxime quo eos dicta ea illo repellat aut non amet praesentium fuga?
+        <S.Text fontSize="sm" fontWeight="light">
+          Conduct research on any subject and receive a real-time analysis of
+          how the audience is reacting. Additionally, searches can be narrowed
+          down by specifying a location for more accurate insights.
         </S.Text>
       </Flex>
       <Button
         colorScheme="blue"
-        variant="outline"
-        onClick={() => navigate(ERoutes.SEARCH)}
+        variant={user ? "outline" : "solid"}
+        onClick={() => navigate(user ? ERoutes.SEARCH : ERoutes.LOGIN)}
       >
-        Access
+        Get Started
       </Button>
     </S.Container>
   )

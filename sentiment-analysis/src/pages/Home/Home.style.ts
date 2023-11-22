@@ -5,6 +5,7 @@ export const Container = styled(Flex)`
   flex-direction: column;
   width: 100%;
   height: 100%;
+  gap: 100px;
   background: radial-gradient(circle at center, #ffffff, #f9f5eb);
 `
 

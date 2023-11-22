@@ -9,10 +9,10 @@ export const Container = styled.div`
   min-height: 100vh;
   flex: 1;
   overflow: hidden;
-  /* background-size: cover;
-  background-image: url("/src/assets/search.png"); */
-  background-color: #002b5b;
-  filter: saturate(80%);
+  background-size: cover;
+  background-image: url("/src/assets/fisrtCard.jpg");
+
+  filter: saturate(70%);
 `
 
 export const Wrapper = styled.div`

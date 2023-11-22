@@ -10,7 +10,7 @@ export const Cover = styled(Flex)<{ background: string }>`
 `
 
 export const Text = styled(Txt)`
-  font-family: "Montserrat", sans-serif;
+  font-family: "Sora", sans-serif;
 `
 
 export const Container = styled(Flex)`

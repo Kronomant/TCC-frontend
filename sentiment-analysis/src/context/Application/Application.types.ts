@@ -17,6 +17,58 @@ export enum EStatusOption {
   DONE = "DONE",
 }
 
+export type TTag = {
+  id: number
+  term: string
+  frequency: number
+  is_active: boolean
+  location: {
+    name: string
+    woeid: string
+  }
+  tweets_collected: number
+}
+
+export type TIntervalData = {
+  intervals: string[]
+  percent: number[]
+}
+
+export type TTimelineData = {
+  positive: TIntervalData
+  negative: TIntervalData
+}
+
+export type TOverallData = {
+  positive_percentage: number
+  negative_percentage: number
+  neutral_percentage: number
+}
+
+export type TTagData = {
+  id: number
+  overall: TOverallData
+  timeline: TTimelineData
+}
+
+export type TTagDataResponse = {
+  status: EStatusOption
+  data: TTagData
+}
+
+export type TTagResponse = {
+  status: EStatusOption
+  data: TTag[]
+}
+
+export type TTagInfo = {
+  id?: number
+  user_id: number
+  term: string
+  location: string
+  frequency: number
+}
+
 export type TSentimentChartData = {
   positive_percentage: number
   negative_percentage: number
@@ -67,6 +119,15 @@ export interface IApplicationContext {
   locations: TLocation[]
   search: TRealTimeSearchResponse
   compareTerms: TCompareSearchResponse
+  tags: TTagResponse
+  activeTag: TTag
+  tagData: TTagDataResponse
   handleRealTimeSearch: (data: TSearch) => Promise<void>
   handleCompareTerms: (data: TCompareSearch) => Promise<void>
+  handleAddTag: (data: TTagInfo) => Promise<void>
+  setActiveTag: React.Dispatch<React.SetStateAction<TTag>>
+  handleGetAllTags: () => Promise<void>
+  handleUpdateTag: (data: TTagInfo) => Promise<void>
+  handleActiveTag: (id: number) => Promise<void>
+  handleDeleteTag: (id: number) => Promise<void>
 }

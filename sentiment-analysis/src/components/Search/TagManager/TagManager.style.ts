@@ -4,6 +4,7 @@ export const Container = styled.div<{ isActive: boolean }>`
   width: 100%;
   display: flex;
   flex-direction: column;
+  min-height: ${({ isActive }) => (isActive ? "700px" : "0")};
   height: ${({ isActive }) => (isActive ? "100%" : "0")};
   background-color: white;
   padding: ${({ isActive }) => (isActive ? "32px 72px" : "0")};
@@ -12,8 +13,6 @@ export const Container = styled.div<{ isActive: boolean }>`
   opacity: ${({ isActive }) => (isActive ? "1" : "0")};
   transform: translateY(${({ isActive }) => (isActive ? "0" : "100%")});
   transition: all 0.7s ease;
-  justify-content: center;
-  align-items: center;
   gap: 24px;
 
   div {

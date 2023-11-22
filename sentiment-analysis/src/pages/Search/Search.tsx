@@ -49,8 +49,12 @@ const TCOMPARE_INITIAL_STATE = {
 }
 
 export const Search = () => {
-  const { locations, handleRealTimeSearch, handleCompareTerms } =
-    useApplication()
+  const {
+    locations,
+    handleRealTimeSearch,
+    handleCompareTerms,
+    handleGetAllTags,
+  } = useApplication()
   const [active, setActive] = useState<boolean>(false)
   const [activeComparison, setActiveComparison] = useState<boolean>(false)
   const [activeTag, setActiveTag] = useState<boolean>(false)
@@ -75,6 +79,7 @@ export const Search = () => {
   const handleSendData = useCallback(() => {
     validateSchema(RealTimeSchema, values, setErrors, async () => {
       setActive(true)
+      setActiveComparison(false)
       await handleRealTimeSearch(values)
     })
   }, [values, location, setActive, active])
@@ -82,11 +87,11 @@ export const Search = () => {
   const handleSendCompareTerms = useCallback(() => {
     console.log(compareValues)
     validateSchema(CompareTermsSchema, compareValues, setErrors, async () => {
-      console.log("teste")
       setActiveComparison(true)
+      setActive(false)
       await handleCompareTerms(compareValues)
     })
-  }, [compareValues, location, setActive, active])
+  }, [compareValues, location, setActive, active, setActiveComparison])
 
   useEffect(() => {
     if (user) {
@@ -103,9 +108,16 @@ export const Search = () => {
         <S.SearchSection>
           <Logo />
           <Tabs
-            onChange={(index) => index === 2 ? setActiveTag(true) : setActiveTag(false)}
+            align="center"
+            onChange={(index) => {
+              if (index === 2) {
+                setActiveTag(true)
+              } else {
+                setActiveTag(false)
+              }
+            }}
             variant="solid-rounded"
-            colorScheme="twitter"
+            colorScheme="red"
           >
             <TabList>
               <Tab color="white">Real Time</Tab>
@@ -142,7 +154,7 @@ export const Search = () => {
                         setErrors((v) => ({ ...v, ["location"]: undefined }))
                       }
                     >
-                      {locations.map((location) => (
+                      {locations?.map((location) => (
                         <option
                           key={`location-${location.id}`}
                           value={location.id}
@@ -194,7 +206,7 @@ export const Search = () => {
                       setCompareValues((v) => ({ ...v, location: value }))
                     }}
                   >
-                    {locations.map((location) => (
+                    {locations?.map((location) => (
                       <option
                         key={`location-${location.id}`}
                         value={location.woeid}
@@ -210,16 +222,19 @@ export const Search = () => {
                 </S.SearchWrapper>
               </TabPanel>
               <TabPanel w="900px">
-                <Flex w='900px' h='40px' />
+                <Flex w="900px" h="40px" />
               </TabPanel>
             </TabPanels>
           </Tabs>
         </S.SearchSection>
 
-        <ResponseSection query={values.term} isActive={active} />
+        <ResponseSection
+          query={values.term}
+          isActive={active && !activeTag && !activeComparison}
+        />
         <ComparisonSection
           searchQuery={compareValues}
-          isActive={activeComparison}
+          isActive={activeComparison && !activeTag && !active}
         />
         <TagManager isActive={activeTag} />
       </S.Wrapper>

@@ -1,27 +1,57 @@
-import { EOpinion } from 'context/Application'
-import * as S from './Tag.style'
+import { EOpinion, TTag } from "context/Application"
+import * as S from "./Tag.style"
+import { Flex, Text, Tag as TagChakra } from "@chakra-ui/react"
+
+import TwitterIcon from "@mui/icons-material/Twitter"
 
 interface ITag {
-  term: string
-  frequency: number
-  sentiment: EOpinion
-  total: number
+  tag: TTag
+  isActive: boolean
+  onClick: () => void
 }
 
-export const Tag = ({term, frequency, sentiment, total}: ITag) => {
+export const Tag = ({ tag, isActive, onClick }: ITag) => {
+  return (
+    <S.Container flexDir="column" onClick={onClick} isActive={isActive}>
+      <Flex justifyContent="space-between" w="100%">
+        <Flex padding="8px 16px" gap="8px">
+          <Flex gap="4px">
+            <Text>Term:</Text>
+            <Text fontWeight="semibold">{tag?.term}</Text>
+          </Flex>
 
-  const Colors = {
-    [EOpinion.NEGATIVE]: "#EA5455",
-    [EOpinion.POSITIVE]: "#26B20F",
-    [EOpinion.NEUTRAL]: "#61A3BA",
-  }
-  return(
-    <S.Container color={Colors[sentiment]}>
-      {term}
-      {frequency}
-      {total}
+          <Flex gap="4px">
+            <Text>Frequency:</Text>
+            <Text fontWeight="semibold">{tag?.frequency} min</Text>
+          </Flex>
+
+          <Flex gap="4px">
+            <Text>Location:</Text>
+            <Text fontWeight="semibold">{tag?.location.name}</Text>
+          </Flex>
+        </Flex>
+        <TagChakra
+          w="80px"
+          h="20px"
+          justifyContent="center"
+          borderRadius="0px 6px "
+          variant="subtle"
+          colorScheme={tag?.is_active ? "green" : "gray"}
+        >
+          {tag?.is_active ? "Active" : "Disabled"}
+        </TagChakra>
+      </Flex>
+      <Flex padding="8px 16px" gap="16px">
+        <Flex alignItems="center" gap="4px">
+          <TwitterIcon style={{ color: "#1DA1F2" }} />
+          <Text fontWeight="light" fontSize="sm">
+            Collected:
+          </Text>
+          <Text fontWeight="light" fontSize="sm">
+            {tag?.tweets_collected} tweets
+          </Text>
+        </Flex>
+      </Flex>
     </S.Container>
-    )
+  )
 }
-
-

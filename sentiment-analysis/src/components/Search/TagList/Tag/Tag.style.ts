@@ -1,11 +1,12 @@
 import { Flex } from "@chakra-ui/react"
 import styled from "styled-components"
 
-export const Container = styled(Flex)<{color: string}>`
+export const Container = styled(Flex)<{ isActive: boolean }>`
   width: 100%;
-  height: 60px;
   border-radius: 8px;
-  padding: 16px 8px;
-  border-left: 1px solid ${({color}) => color};
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
+  cursor: pointer;
+  border: ${({ isActive }) => (isActive ? "1px solid #1DA1F2" : "")};
+  box-shadow:
+    rgba(9, 30, 66, 0.25) 0px 4px 8px -2px,
+    rgba(9, 30, 66, 0.08) 0px 0px 0px 1px;
 `
